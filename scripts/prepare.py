@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""一键准备脚本：新机器 clone 本仓库后，用任意 Python 3.9+ 跑一次即可。
+"""一键准备脚本：新机器 clone 本仓库后，用 **Python 3.10+** 跑一次即可。
 
-    python3 scripts/prepare.py            # 完整准备（大模型下载前会询问）
-    python3 scripts/prepare.py --check    # 只检查不安装/不下载
-    python3 scripts/prepare.py --yes      # 下载模型不再逐个询问
+    python3.13 scripts/prepare.py      # 完整准备（大模型下载前会询问）
+    python3.13 scripts/prepare.py --check    # 只检查不安装/不下载
+    python3.13 scripts/prepare.py --yes      # 下载模型不再逐个询问
+
+⚠️ **必须是 3.10 及以上**，而且要用它来建 .venv（脚本用 `sys.executable` 建 venv，
+所以你用哪个 Python 跑它，venv 就是哪个版本）。
+
+    macOS 自带的 /usr/bin/python3 是 3.9.x，**装不了 torch**：
+      · PyTorch 从未发布过 cp39 的 macOS arm64 wheel（实测：cp39 0 个 / cp313 6 个）
+      · transformers / tokenizers / safetensors / huggingface_hub 要求 >=3.10
+      · numpy 2.x 要求 >=3.12
+    装一个并用即可（不影响系统自带那个）：
+      brew install python@3.13
+      python3.13 scripts/prepare.py
 
 它做五件事：
   1. 运行环境：在项目内建 .venv（Apple Silicon / macOS 原生，不需要 conda）；
@@ -24,6 +35,27 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+# ---- 版本守卫：必须在任何动作之前拦下 ---------------------------------------
+# 放这里而不是等到 pip 装 torch 时才失败：3.9 的报错是
+# "No matching distribution found for torch"，看不出是 Python 版本问题。
+MIN_PY = (3, 10)
+if sys.version_info < MIN_PY:
+    sys.stderr.write(
+        "\n[错误] 需要 Python %d.%d+，当前是 %s。\n"
+        "       \n"
+        "       macOS 自带的 /usr/bin/python3 是 3.9.x，装不了本项目的 PyTorch：\n"
+        "         · PyTorch 没有发布过 cp39 的 macOS arm64 wheel\n"
+        "         · transformers / tokenizers / safetensors / huggingface_hub 要求 >=3.10\n"
+        "         · numpy 2.x 要求 >=3.12\n"
+        "       \n"
+        "       系统自带的那个不要动（归 root 且开了 SIP，改不了也删不掉）。\n"
+        "       并装一个新版即可，两者互不干扰：\n"
+        "         brew install python@3.13\n"
+        "         python3.13 scripts/prepare.py\n"
+        "\n" % (MIN_PY[0], MIN_PY[1], platform.python_version())
+    )
+    raise SystemExit(1)
 
 ROOT = Path(__file__).resolve().parent.parent
 HF_MIRROR = os.environ.get("HF_MIRROR", "https://hf-mirror.com").rstrip("/")

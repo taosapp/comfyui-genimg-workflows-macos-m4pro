@@ -96,15 +96,25 @@
 ## 快速开始（新电脑）
 
 本仓库 clone 下来后**只含策划资产**（工作流/风格库/自建节点/补丁/启动器），
-运行时、依赖、模型都不在仓库里。用任意 Python 3.9+ 跑一次准备脚本即可补齐：
+运行时、依赖、模型都不在仓库里。用 **Python 3.10+** 跑一次准备脚本即可补齐：
 
 ```bash
 git clone https://github.com/taosapp/comfyui-genimg-workflows-macos-m4pro.git
 cd comfyui-genimg-workflows-macos-m4pro
-python3 scripts/prepare.py                # 全自动：环境 + 运行时 + 依赖 + 节点补丁 + 模型下载
-python3 scripts/prepare.py --check        # 或先只做检查，缺什么会列出来
-python3 scripts/prepare.py --core-only    # 只装核心模型（跳过分层文生图那 20+GB）
+
+# ⚠️ 需要 Python 3.10+，且必须用它来跑（脚本按 sys.executable 建 .venv）。
+#    macOS 自带的 /usr/bin/python3 是 3.9.x，装不了 torch，先并装一个：
+brew install python@3.13
+
+python3.13 scripts/prepare.py                # 全自动：环境 + 运行时 + 依赖 + 节点补丁 + 模型下载
+python3.13 scripts/prepare.py --check        # 或先只做检查，缺什么会列出来
+python3.13 scripts/prepare.py --core-only    # 只装核心模型（跳过分层文生图那 20+GB）
 ```
+
+> **为什么不能用系统自带的 Python**：PyTorch 从未发布过 cp39 的 macOS arm64 wheel
+> （实测 cp39 0 个 / cp313 6 个）；transformers / tokenizers / safetensors / huggingface_hub
+> 要求 >=3.10，numpy 2.x 要求 >=3.12。系统那个归 root 且开了 SIP，**不要动**，并装即可。
+
 
 准备脚本会依次：在项目内建 `.venv`（Apple Silicon 原生，不需要 conda）→
 浅克隆官方 ComfyUI 补齐运行时 → 装 PyTorch（MPS）与 ComfyUI 依赖（走清华镜像）→
