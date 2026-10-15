@@ -2,11 +2,11 @@
 
 > 历史快照（2026-09-22）：当时 ComfyUI 还装在独立的旧目录，现在**仓库根目录本身就是运行环境**，
 > 文中的绝对路径已统一换成当前目录。
-> 日常配置请看 `README.md` 与 `docs/移植与开源说明.md`，本文仅作早期搭建记录。
+> 日常配置请看 `README.md`，本文仅作早期搭建记录。
 
 ## 系统要求
-- GPU: NVIDIA RTX 3060 12GB
-- 内存: 32GB
+- GPU: Apple M4 Pro（24GB 统一内存，MPS 后端）
+- 内存: 24GB
 - Python: 3.12+（项目内 `.venv`）
 - 加速后端: **MPS**（Apple Silicon，无 CUDA）
 

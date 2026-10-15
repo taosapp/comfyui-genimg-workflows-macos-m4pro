@@ -57,13 +57,6 @@ if [ -z "$PY" ]; then
     done
 fi
 if [ -z "$PY" ]; then
-    # conda 环境（装了 conda 但没建项目 venv 的情况）
-    if command -v conda >/dev/null 2>&1; then
-        CONDA_PY="$(conda run -n comfyui python -c 'import sys;print(sys.executable)' 2>/dev/null || true)"
-        [ -n "$CONDA_PY" ] && [ -x "$CONDA_PY" ] && PY="$CONDA_PY"
-    fi
-fi
-if [ -z "$PY" ]; then
     PY="$(command -v python3 || command -v python || true)"
 fi
 

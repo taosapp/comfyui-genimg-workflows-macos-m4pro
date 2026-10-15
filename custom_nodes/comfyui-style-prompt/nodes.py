@@ -155,7 +155,7 @@ class StylePromptSelector:
         return {
             "required": {
                 "style": (names, {"tooltip": "第一项「自定义」= 不用风格库，下面这个框就是完整的正向提示词；"
-                                           "其余来自 ComfyUI\\styles 里的 *.txt，文件名即风格名"}),
+                                           "其余来自 styles/ 目录里的 *.txt，文件名即风格名"}),
                 "describe": ("STRING", {
                     "multiline": True,
                     "dynamicPrompts": False,

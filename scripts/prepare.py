@@ -299,7 +299,7 @@ def setup_gguf(env_py):
             warn("克隆失败，可设置 HTTP_PROXY=http://127.0.0.1:7897 后重跑；补丁步骤跳过")
             return
     patch = ROOT / "patches" / "comfyui-gguf-add-qwen-image-arch.patch"
-    # 注意：Windows 上 clone 下来的 convert.py 是 **CRLF** 行尾，而仓库里的 patch 是 LF，
+    # 注意：clone 下来的 convert.py 若是 **CRLF** 行尾（而仓库里的 patch 是 LF），
     # 严格模式会报 "patch does not apply"。所以先试严格模式，失败再退到 --ignore-whitespace。
     applied = False
     for extra in ([], ["--ignore-whitespace"]):
