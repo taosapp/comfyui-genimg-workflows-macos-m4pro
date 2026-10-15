@@ -1,0 +1,6 @@
+# 启动脚本必须是 LF 行尾：.sh 在 Windows 上若被转成 CRLF 会直接
+# "bad interpreter: /bin/bash^M" 跑不起来。
+start_comfyui.sh text eol=lf
+
+# 工作流 JSON 保持 LF，避免跨平台 diff 噪音
+workflows/*.json text eol=lf

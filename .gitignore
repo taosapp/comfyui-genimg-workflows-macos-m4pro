@@ -1,0 +1,45 @@
+# 本仓库只跟踪策划资产：工作流 / 风格库 / 自建节点 / 补丁 / 脚本 / 文档。
+# 目录本体同时是一套完整 ComfyUI 运行环境（上游代码 + 模型 + 个人素材），
+# 一律不进 git，采用白名单模式：
+#
+# ⚠️ 这个文件曾被上游 ComfyUI 的 .gitignore 覆盖过（黑名单式，会漏掉
+# custom_nodes/comfyui-style-prompt）。prepare.py 的 setup_upstream() 已有
+# ours 白名单保护不会再次覆盖，但手动合并上游文件时仍需注意。
+
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/LICENSE
+!/workflows/
+!/styles/
+!/patches/
+!/scripts/
+!/docs/
+!/start_comfyui.sh
+!/custom_nodes/
+
+# custom_nodes 里只保留自建节点包（ComfyUI-GGUF 是第三方 clone，不进仓库）
+# 注意：!/custom_nodes/ 那行不能省。git 的规则是「父目录被排除后，
+# 无法再重新包含其中的文件」——少了它，comfyui-style-prompt 会被一起漏掉。
+/custom_nodes/*
+!/custom_nodes/comfyui-style-prompt/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# ComfyUI 运行时产物（上游 clone / 出图 / 临时文件）
+/output/
+/input/
+!/input/example.png
+/temp/
+/models/
+/alembic_db/
+/user/
+*.log
+
+# 系统文件
+Thumbs.db
+.DS_Store
